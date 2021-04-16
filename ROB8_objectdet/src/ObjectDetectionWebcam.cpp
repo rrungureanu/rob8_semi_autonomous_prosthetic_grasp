@@ -10,7 +10,7 @@ int main(int argc, char** argv)
     image_transport::ImageTransport it(nh);
     image_transport::Publisher pub = it.advertise("/camera/image_raw", 1);
     ROS_INFO("B4 capture");
-    cv::VideoCapture cap(0);
+    cv::VideoCapture cap("/home/silverback/ROB8_ws/src/ROB8_objectdet/src/run.mp4");
     // Check if video device can be opened with the given index
     if(!cap.isOpened()) return 1;
     ROS_INFO("Camera opened");
