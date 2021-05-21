@@ -26,8 +26,8 @@ using namespace std;
 // Initialize the parameters
 float confThreshold = 0.5; // Confidence threshold
 float nmsThreshold = 0.4;  // Non-maximum suppression threshold
-int inpWidth = 320;  // Width of network's input image
-int inpHeight = 320; // Height of network's input image
+int inpWidth = 416;  // Width of network's input image
+int inpHeight = 416; // Height of network's input image
 vector<string> classes;
 static const std::string OPENCV_WINDOW = "Image window";
 
@@ -44,6 +44,7 @@ class ImageConverter
     image_transport::ImageTransport it_;
     image_transport::Subscriber image_sub_;
     image_transport::Publisher image_pub_;
+    cv::VideoCapture cap;
 
 public:
     ImageConverter();

@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   cv_bridge
   image_transport
+  darknet_ros_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -193,15 +194,18 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
-add_executable(ObjectDetectionYOLO src/ObjectDetectionYOLO.cpp)
-add_dependencies(ObjectDetectionYOLO ${catkin_EXPORTED_TARGETS})
 add_executable(ObjectDetectionWebcam src/ObjectDetectionWebcam.cpp)
 add_dependencies(ObjectDetectionWebcam ${catkin_EXPORTED_TARGETS})
+add_executable(ObjectDetectionCropper src/ObjectDetectionCropper.cpp)
+add_dependencies(ObjectDetectionCropper ${catkin_EXPORTED_TARGETS})
+add_executable(RosTCPCommunication src/RosTCPCommunication.cpp)
+add_dependencies(RosTCPCommunication ${catkin_EXPORTED_TARGETS})
 
 find_package(OpenCV 4.5.2 EXACT REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 add_definitions(-DOPEN_CV_INSTALLED)
-target_link_libraries(ObjectDetectionYOLO ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(ObjectDetectionWebcam ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(ObjectDetectionCropper ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(RosTCPCommunication ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -o3 -pthread -std=c++14")

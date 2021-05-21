@@ -8,15 +8,15 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "image_publisher");
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh);
-    image_transport::Publisher pub = it.advertise("/camera/image_raw", 1);
+    image_transport::Publisher pub = it.advertise("/camera/rgb/image_raw", 1);
     ROS_INFO("B4 capture");
-    cv::VideoCapture cap("/home/silverback/ROB8_ws/src/ROB8_objectdet/src/run.mp4");
+    cv::VideoCapture cap(0);
     // Check if video device can be opened with the given index
     if(!cap.isOpened()) return 1;
     ROS_INFO("Camera opened");
     cv::Mat frame;
     sensor_msgs::ImagePtr msg;
-
+    int frame_id = 1;
     ros::Rate loop_rate(5);
     while (nh.ok()) {
         cap >> frame;
@@ -24,8 +24,10 @@ int main(int argc, char** argv)
         if(!frame.empty()) {
             imshow("Full frame",frame);
             msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
+            msg->header.frame_id = std::to_string(frame_id);
             pub.publish(msg);
             cv::waitKey(1);
+            frame_id++;
         }
 
         ros::spinOnce();

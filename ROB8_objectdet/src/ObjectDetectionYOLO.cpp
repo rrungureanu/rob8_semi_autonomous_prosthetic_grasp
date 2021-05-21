@@ -63,6 +63,7 @@ void postprocess(Mat& frame, const vector<Mat>& outs, Rect& out)
 vector<String> getOutputsNames(const Net& net)
 {
     static vector<String> names;
+    ROS_INFO("Getting output names");
     if (names.empty())
     {
         //Get the indices of the output layers, i.e. the layers with unconnected outputs
@@ -83,6 +84,9 @@ vector<String> getOutputsNames(const Net& net)
 ImageConverter::ImageConverter()
         : it_(nh_)
 {
+    namedWindow(OPENCV_WINDOW);
+    namedWindow("blob");
+    cap.open("/home/silverback/ROB8_ws/src/ROB8_objectdet/src/run.mp4");
     // Load names of classes
     string classesFile = "/home/silverback/ROB8_ws/src/ROB8_objectdet/src/coco.names";
     ifstream ifs(classesFile.c_str());
@@ -94,9 +98,8 @@ ImageConverter::ImageConverter()
     String modelWeights = "/home/silverback/ROB8_ws/src/ROB8_objectdet/src/yolov3.weights";
 
     net = readNetFromDarknet(modelConfiguration, modelWeights);
-    net.setPreferableBackend(DNN_TARGET_CPU);
 
-    // Subscrive to input video feed and publish output video feed
+    // Subscribe to input video feed and publish output video feed
     image_sub_ = it_.subscribe("/camera/image_raw", 1,
                                &ImageConverter::imageCb, this);
     image_pub_ = it_.advertise("/image_converter/output_video", 1);
@@ -117,14 +120,15 @@ void ImageConverter::imageCb(const sensor_msgs::ImageConstPtr& msg)
         return;
     }
     Mat frame, blob;
-    frame = cv_ptr->image;
+    //frame = cv_ptr->image;
+    cap>>frame;
     if(!frame.empty())
     {
         ROS_INFO("Got here1");
         // Process image
         // Create a 4D blob from a frame.
         blobFromImage(frame, blob, 1 / 255.0, cv::Size(inpWidth, inpHeight), Scalar(0, 0, 0), true, false);
-
+        imshow(OPENCV_WINDOW,frame);
         ROS_INFO("Got here2");
         //Sets the input to the network
         net.setInput(blob);
@@ -140,9 +144,9 @@ void ImageConverter::imageCb(const sensor_msgs::ImageConstPtr& msg)
         ROS_INFO("Got here5");
         cv_ptr->image = croppedImage;
         imshow(OPENCV_WINDOW, croppedImage);
-        waitKey(1);
         //Publish cropped image
         image_pub_.publish(cv_ptr->toImageMsg());
+        waitKey(1);
     }
 }
 
