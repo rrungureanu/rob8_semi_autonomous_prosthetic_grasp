@@ -8,7 +8,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "image_publisher");
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh);
-    image_transport::Publisher pub = it.advertise("/camera/rgb/image_raw", 1);
+    image_transport::Publisher pub = it.advertise("/camera/color/image_raw", 1);
     ROS_INFO("B4 capture");
     cv::VideoCapture cap(0);
     // Check if video device can be opened with the given index

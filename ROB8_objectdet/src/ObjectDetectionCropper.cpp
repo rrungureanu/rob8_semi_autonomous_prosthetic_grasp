@@ -6,7 +6,7 @@ ImageCropper::ImageCropper()
     namedWindow(OPENCV_WINDOW);
 
     // Subscribe to input video feed and publish output video feed
-    image_sub_ = it_.subscribe("/camera/rgb/image_raw", 100,
+    image_sub_ = it_.subscribe("/camera/color/image_stamped", 100,
                                &ImageCropper::imageCb, this);
     bb_sub_ = nh_.subscribe("/darknet_ros/bounding_boxes", 100, &ImageCropper::bbCb, this);
     image_pub_ = it_.advertise("/image_converter/output_video", 100);
