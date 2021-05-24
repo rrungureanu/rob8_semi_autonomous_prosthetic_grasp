@@ -29,7 +29,7 @@ void ImageCropper::imageCb(const sensor_msgs::ImageConstPtr& msg)
     if(!frame.empty())
     {
         current_frame.push_back(frame);
-        current_frameId.push_back(msg->header.frame_id);
+        current_frameStamp.push_back(msg->header.stamp);
     }
 }
 
@@ -41,9 +41,9 @@ void ImageCropper::bbCb(const darknet_ros_msgs::BoundingBoxes& msg)
     Mat curr_frame, cropped_frame, blurred_frame;
     int i, curr = -1;
     //Find if frame is stored in queue
-    for(i = 0; i < current_frameId.size(); i++)
+    for(i = 0; i < current_frameStamp.size(); i++)
     {
-        if (msg.header.frame_id == current_frameId[i])
+        if (msg.header.stamp == current_frameStamp[i])
         {
             curr = i;
             break;

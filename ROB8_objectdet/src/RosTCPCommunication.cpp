@@ -48,7 +48,7 @@ void RosTCPCommunication::oriCb(const std_msgs::Float32& msg)
     ori_received = true;
     ori = msg.data;
     if(obj_received)
-        sendTCP();,
+        sendTCP();
 }
 
 void RosTCPCommunication::sendTCP()

@@ -33,7 +33,7 @@ class ImageCropper
     image_transport::Publisher image_pub_;
     ros::Subscriber bb_sub_;
     vector<Mat> current_frame;
-    vector<string> current_frameId;
+    vector<ros::Time> current_frameStamp;
 public:
     ImageCropper();
     ~ImageCropper()

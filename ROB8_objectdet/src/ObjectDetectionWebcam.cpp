@@ -24,6 +24,7 @@ int main(int argc, char** argv)
         if(!frame.empty()) {
             imshow("Full frame",frame);
             msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
+            msg->header.stamp = ros::Time::now();
             msg->header.frame_id = std::to_string(frame_id);
             pub.publish(msg);
             cv::waitKey(1);
