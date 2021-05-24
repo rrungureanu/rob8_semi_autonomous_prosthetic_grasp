@@ -30,12 +30,12 @@ void ImageCropper::imageCb(const sensor_msgs::ImageConstPtr& msg)
     {
         current_frame.push_back(frame);
         current_frameId.push_back(msg->header.frame_id);
-        ROS_INFO(current_frameId.back().c_str());
     }
 }
 
 void ImageCropper::bbCb(const darknet_ros_msgs::BoundingBoxes& msg)
 {
+    sensor_msgs::ImagePtr msg_send;
     if(msg.bounding_boxes.size() == 0)
         return;
     Mat curr_frame, cropped_frame, blurred_frame;
@@ -74,8 +74,10 @@ void ImageCropper::bbCb(const darknet_ros_msgs::BoundingBoxes& msg)
         //Copy cropped rectangle back onto blurred image
         Mat dest_roi = blurred_frame(crop_rect);
         cropped_frame.copyTo(dest_roi);
+        msg_send = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cropped_frame).toImageMsg();
+        image_pub_.publish(msg_send);
         imshow(OPENCV_WINDOW,blurred_frame);
-        waitKey(50);
+        waitKey(1);
     }
 }
 
